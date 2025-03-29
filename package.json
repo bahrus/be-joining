@@ -1,6 +1,14 @@
 {
   "name": "be-joining",
   "version": "0.0.0",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements",
+    "enhancement",
+    "behavior"
+  ],
   "description": "Similar to [be-joined](https://github.com/bahrus/be-joined) and [be-calculating](https://github.com/bahrus/be-calculating).",
   "homepage": "https://github.com/bahrus/be-joining#readme",
   "bugs": {
@@ -11,10 +19,23 @@
     "url": "git+https://github.com/bahrus/be-joining.git"
   },
   "license": "MIT",
-  "author": "",
+  "author": "anderson.bruce.b@gmail.com",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "serve": "python3 ./node_modules/ssi-server/ssi_server.py",
+    "safari": "npx playwright wk http://localhost:3030",
+    "update": "ncu -u && npm install"
+  },
+  "dependencies": {
+    "be-enhanced": "0.0.170",
+    "be-hive": "0.0.250",
+    "mount-observer": "0.0.45",
+    "trans-render": "0.0.889"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.51.1",
+    "ssi-server": "0.0.1"
   }
 }
