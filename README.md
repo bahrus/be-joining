@@ -7,8 +7,8 @@ Works in conjunction with [xp-as](https://github.com/bahrus/xp-as).
 ```html
 <tr xp-as-a-from=aria-rowindex aria-rowindex=11>
     <td itemprop=myProp xp-as-b-from=itemprop>
-        <input be-joining
-            name-be-joining="hello-|a|-goodbye-|b|"
+        <input type=radio-button be-joining
+            name-be-joining="hello-{a}-goodbye-{b}"
         >
     </td>
 </tr>
@@ -19,8 +19,8 @@ renders:
 ```html
 <tr xp-as-a-from=aria-rowindex aria-rowindex=11>
     <td itemprop=myProp xp-as-b-from=itemprop>
-        <input be-joining
-            name-be-joining="hello-|a|-goodbye-|b|"
+        <input type=radio-button be-joining
+            name-be-joining="hello-{a}-goodbye-{b}"
             name=hello-11-goodbye-myProp
         >
     </td>
