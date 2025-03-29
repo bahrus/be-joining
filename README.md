@@ -18,7 +18,7 @@ renders:
 
 ```html
 <tr xp-as-a-from=aria-rowindex aria-rowindex=11>
-    <td itemprop=myProp xp-as-b-from=itemprop>
+    <td itemprop=myProp xp-as-b=itemprop>
         <input type=radio-button be-joining
             be-joining-name="hello-{a}-goodbye-{b}"
             name=hello-11-goodbye-myProp

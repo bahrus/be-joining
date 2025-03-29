@@ -15,6 +15,9 @@ class BeJoining extends BE {
      * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement>}
      */
     static config = {
+        propDefaults: {
+            xpAsAttr: 'xp-as',
+        },
     };
 }
 
