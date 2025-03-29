@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "author": "anderson.bruce.b@gmail.com",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
