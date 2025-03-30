@@ -76,6 +76,11 @@ class BeJoining extends BE {
     }
 
     /**
+     * @type {{[key: string]: AttrManager}}
+     */
+    #attrManagers = {};
+
+    /**
      * 
      * @param {string} attrName
      * @param {BAP} self 
@@ -90,6 +95,27 @@ class BeJoining extends BE {
                 throw 300;
             }
             const attrMgr = new AttrManager(interpolationExpr, targetAttr, self);
+            this.#attrManagers[targetAttr] = attrMgr; // Store the manager for this target attribute
+        }
+    }
+
+    /**
+     * 
+     * @param {Element} el 
+     */
+    async detach(el){
+        super.detach(el);
+        if(this.#mutationObserver){
+            this.#mutationObserver.disconnect();
+            this.#mutationObserver = undefined;
+        }
+
+        for(const key in this.#attrManagers){
+            const attrMgr = this.#attrManagers[key];
+            if(attrMgr){
+                // Disconnect the event listeners
+                attrMgr.disconnect();
+            }
         }
     }
 }
@@ -113,7 +139,7 @@ class AttrManager{
     #interpolationParts;
 
     /**
-     * @type {BAP}
+     * @type {BAP | undefined}
      */
     #self
 
@@ -138,8 +164,14 @@ class AttrManager{
     async #hydrate(){
         const parts = toParts(this.#interpolationExpr);
         this.#interpolationParts = parts;
-        const xpAsAttr = this.#self.xpAsAttr || 'xp-as';
-        const {enhancedElement} = this.#self;
+        const self = this.#self;
+        if(!self){
+            // This should not happen but just in case, we return early if self is not defined
+            console.error('Self is undefined in AttrManager during hydration');
+            return;
+        }
+        const xpAsAttr = self.xpAsAttr || 'xp-as';
+        const {enhancedElement} = self;
         for(const part of parts){
             if(Array.isArray(part)){
                 const [NameOfProp] = part;
@@ -165,7 +197,6 @@ class AttrManager{
         this.#interpolate();
 
         // Now we have all the factors, we can compute the value for the target attribute.
-        console.log({parts});
     }
 
     #interpolate(){
@@ -180,7 +211,7 @@ class AttrManager{
             }
         }
         const joinedString = tbd.join('');
-        this.#self.enhancedElement.setAttribute(this.#targetAttr, joinedString);
+        this.#self?.enhancedElement.setAttribute(this.#targetAttr, joinedString);
     }
     /**
      * 
@@ -188,6 +219,10 @@ class AttrManager{
      */
     handleEvent(e){
         this.#interpolate();
+    }
+
+    disconnect(){
+        this.#self = undefined;
     }
 }
 
