@@ -123,6 +123,9 @@ class BeJoining extends BE {
 /** @implements {EventListenerObject} */
 class AttrManager{
 
+
+    #abortController = new AbortController();
+
     /**
      * @type {string}
      */
@@ -192,7 +195,7 @@ class AttrManager{
         for(const factorKey in this.#factors){
             const factor = this.#factors[factorKey];
             const {NameOfProp, xpAs} = factor;
-            xpAs.props.addEventListener(NameOfProp, this);
+            xpAs.props.addEventListener(NameOfProp, this, {signal: this.#abortController.signal}); // Listen for changes on the property of the source element
         }
         this.#interpolate();
 
@@ -223,6 +226,7 @@ class AttrManager{
 
     disconnect(){
         this.#self = undefined;
+        this.#abortController.abort(); // This will cancel any ongoing events or listeners
     }
 }
 
