@@ -2,10 +2,11 @@
 import { propInfo, rejected, resolved } from 'be-enhanced/cc.js';
 import { BE } from 'be-enhanced/BE.js';
 import {toParts} from 'trans-render/lib/brace.js';
+import {emc} from 'xp-as/emc.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AllProps, AP, BAP} from './ts-refs/be-joining/types' */;
+/** @import {Actions, PAP, AllProps, AP, BAP, Factor} from './ts-refs/be-joining/types' */;
 /** @import {EnhancementInfo} from './ts-refs/trans-render/be/types' */
-
+/** @import {AllProps as XPAsAllProps} from './ts-refs/xp-as/types';
 
 /**
  * @implements {Actions}
@@ -96,21 +97,57 @@ class BeJoining extends BE {
 class AttrManager{
 
     /**
+     * @type {string}
+     */
+    #targetAttr;
+
+    /**
+     * @type {string}
+     */
+    #interpolationExpr;
+
+    /**
+     * @type {BAP}
+     */
+    #self
+
+    /**
+     * @type {Factor[]}
+     */
+    #factors = [];
+
+    /**
      * 
      * @param {string} interpolationExpr
      * @param {string} targetAttr
      * @param {BAP} self 
      */
     constructor(interpolationExpr, targetAttr, self){
-        const parts = toParts(interpolationExpr);
-        const xpAsAttr = self.xpAsAttr || 'xp-as';
-        const {enhancedElement} = self;
+        this.#targetAttr = targetAttr;
+        this.#interpolationExpr = interpolationExpr;
+        this.#self = self;
+        this.#hydrate() 
+    }
+
+    async #hydrate(){
+        const parts = toParts(this.#interpolationExpr);
+        const xpAsAttr = this.#self.xpAsAttr || 'xp-as';
+        const {enhancedElement} = this.#self;
         for(const part of parts){
             if(Array.isArray(part)){
                 const [NameOfProp] = part;
                 const cssQry = `[${xpAsAttr}-${NameOfProp}]`;
-                const sourceEl = enhancedElement.closest(cssQry);
-                console.log({cssQry, sourceEl});
+                const sourceEl = /** @type {any>} */ (enhancedElement.closest(cssQry));
+                if(sourceEl === null) throw 404;
+                /**
+                 * @type {XPAsAllProps}
+                 */
+                const xpAs = await  sourceEl.beEnhanced.whenAttached(emc);
+                this.#factors.push({
+                    NameOfProp,
+                    xpAs,
+                });
+                console.log({cssQry, sourceEl, props: xpAs.props});
             }
         }
         console.log({parts});
@@ -123,6 +160,8 @@ class AttrManager{
 
     }
 }
+
+
 
 await BeJoining.bootUp();
 export {BeJoining};
