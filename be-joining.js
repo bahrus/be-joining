@@ -179,7 +179,8 @@ class AttrManager{
                 tbd.push(part);
             }
         }
-        console.log({tbd});
+        const joinedString = tbd.join('');
+        this.#self.enhancedElement.setAttribute(this.#targetAttr, joinedString);
     }
     /**
      * 
