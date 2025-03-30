@@ -16,8 +16,8 @@ class BeJoining extends BE {
      * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement>}
      */
     static config = {
-        propDefaults: {
-            xpAsAttr: 'xp-as',
+        propInfo: {
+            xpAsAttr: {}
         },
         compacts:{
             when_xpAsAttr_changes_invoke_hydrate: 0,
@@ -87,7 +87,7 @@ class BeJoining extends BE {
             if(interpolationExpr === null){
                 throw 300;
             }
-            const attrMgr = new AttrManager(interpolationExpr, targetAttr);
+            const attrMgr = new AttrManager(interpolationExpr, targetAttr, self);
         }
     }
 }
@@ -97,10 +97,22 @@ class AttrManager{
 
     /**
      * 
-     * @param {string} interpolationExpr 
+     * @param {string} interpolationExpr
+     * @param {string} targetAttr
+     * @param {BAP} self 
      */
-    constructor(interpolationExpr, targetAttr){
+    constructor(interpolationExpr, targetAttr, self){
         const parts = toParts(interpolationExpr);
+        const xpAsAttr = self.xpAsAttr || 'xp-as';
+        const {enhancedElement} = self;
+        for(const part of parts){
+            if(Array.isArray(part)){
+                const [NameOfProp] = part;
+                const cssQry = `[${xpAsAttr}-${NameOfProp}]`;
+                const sourceEl = enhancedElement.closest(cssQry);
+                console.log({cssQry, sourceEl});
+            }
+        }
         console.log({parts});
     }
     /**
