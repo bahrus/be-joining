@@ -37,7 +37,7 @@ renders:
 </tr>
 ```
 
-## Shortcuts [Untested]
+## Shortcuts 
 
 ```html
 <tr 📎-a=aria-rowindex aria-rowindex=11>

@@ -2,7 +2,7 @@
 import { propInfo, rejected, resolved } from 'be-enhanced/cc.js';
 import { BE } from 'be-enhanced/BE.js';
 import {toParts} from 'trans-render/lib/brace.js';
-import {emc} from 'xp-as/emc.js';
+//import {emc} from 'xp-as/emc.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP, AllProps, AP, BAP, Factor} from './ts-refs/be-joining/types' */;
 /** @import {EnhancementInfo} from './ts-refs/trans-render/be/types' */
@@ -173,6 +173,9 @@ class AttrManager{
             console.error('Self is undefined in AttrManager during hydration');
             return;
         }
+        /**
+         * @type {string}
+         */
         const xpAsAttr = self.xpAsAttr || 'xp-as';
         const {enhancedElement} = self;
         for(const part of parts){
@@ -181,10 +184,19 @@ class AttrManager{
                 const cssQry = `[${xpAsAttr}-${NameOfProp}]`;
                 const sourceEl = /** @type {any>} */ (enhancedElement.closest(cssQry));
                 if(sourceEl === null) throw 404;
+                let emc;
+                switch(xpAsAttr) {
+                    case 'xp-as':
+                        emc = (await import('xp-as/emc.js')).emc;
+                        break;
+                    case '📎': 
+                        emc = (await import('xp-as/📎.js')).emc; 
+                        break;
+                }
                 /**
                  * @type {XPAsAllProps}
                  */
-                const xpAs = await  sourceEl.beEnhanced.whenAttached(emc);
+                const xpAs = await sourceEl.beEnhanced.whenAttached(emc)
                 this.#factors[NameOfProp] = {
                     NameOfProp,
                     xpAs,
