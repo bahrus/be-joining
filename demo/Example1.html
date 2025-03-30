@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- #include virtual="/imports.html" -->
+     <script type=module>
+        import '/emc.js';
+     </script>
+</head>
+<body>
+    <table>
+        <tr id=testRow aria-rowindex=11
+            xp-as
+            xp-as-a-from=aria-rowindex
+        >
+            <td>
+                <input type=radio-button be-joining
+                be-joining-name="hello-{a}-goodbye-{b}"
+                name=hello-11-goodbye-myProp
+            >
+            </td>
+        </tr>
+    </table>
+    <button onclick=test()>Test</button>
+    <script>
+        function test(){
+            const xpAs = testRow.beEnhanced.xpAs;
+            console.log(xpAs.props.a - 3);
+            // 8
+            xpAs.props.addEventListener('a', e => {
+                console.log(xpAs.props.a - 3);
+                //2
+            });
+            testRow.ariaRowIndex = 5;
+        }
+    </script>
+</body>
+</html>
