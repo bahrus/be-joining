@@ -6,7 +6,8 @@ import {emc} from 'xp-as/emc.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP, AllProps, AP, BAP, Factor} from './ts-refs/be-joining/types' */;
 /** @import {EnhancementInfo} from './ts-refs/trans-render/be/types' */
-/** @import {AllProps as XPAsAllProps} from './ts-refs/xp-as/types';
+/** @import {AllProps as XPAsAllProps} from './ts-refs/xp-as/types'; */
+/** @import {Parts} from './ts-refs/trans-render/froop/types' */
 
 /**
  * @implements {Actions}
@@ -107,14 +108,19 @@ class AttrManager{
     #interpolationExpr;
 
     /**
+     * @type {Parts}
+     */
+    #interpolationParts;
+
+    /**
      * @type {BAP}
      */
     #self
 
     /**
-     * @type {Factor[]}
+     * @type {{[key: string] : Factor}}
      */
-    #factors = [];
+    #factors = {};
 
     /**
      * 
@@ -131,6 +137,7 @@ class AttrManager{
 
     async #hydrate(){
         const parts = toParts(this.#interpolationExpr);
+        this.#interpolationParts = parts;
         const xpAsAttr = this.#self.xpAsAttr || 'xp-as';
         const {enhancedElement} = this.#self;
         for(const part of parts){
@@ -143,21 +150,43 @@ class AttrManager{
                  * @type {XPAsAllProps}
                  */
                 const xpAs = await  sourceEl.beEnhanced.whenAttached(emc);
-                this.#factors.push({
+                this.#factors[NameOfProp] = {
                     NameOfProp,
                     xpAs,
-                });
+                };
                 console.log({cssQry, sourceEl, props: xpAs.props});
             }
         }
+        for(const factorKey in this.#factors){
+            const factor = this.#factors[factorKey];
+            const {NameOfProp, xpAs} = factor;
+            xpAs.props.addEventListener(NameOfProp, this);
+        }
+        this.#interpolate();
+
+        // Now we have all the factors, we can compute the value for the target attribute.
         console.log({parts});
+    }
+
+    #interpolate(){
+        const tbd = [];
+        for(const part of this.#interpolationParts){
+            if(Array.isArray(part)){
+                // This is a reference to another attribute
+                const [NameOfProp] = part;
+                tbd.push(this.#factors[NameOfProp].xpAs.props[NameOfProp]);
+            }else{
+                tbd.push(part);
+            }
+        }
+        console.log({tbd});
     }
     /**
      * 
      * @param {Event} e 
      */
     handleEvent(e){
-
+        this.#interpolate();
     }
 }
 
