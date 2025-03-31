@@ -189,8 +189,8 @@ class AttrManager{
                     case 'xp-as':
                         emc = (await import('xp-as/emc.js')).emc;
                         break;
-                    case '📎': 
-                        emc = (await import('xp-as/📎.js')).emc; 
+                    case '📌': 
+                        emc = (await import('xp-as/📌.js')).emc; 
                         break;
                 }
                 /**

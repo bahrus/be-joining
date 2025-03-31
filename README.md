@@ -40,9 +40,9 @@ renders:
 ## Shortcuts 
 
 ```html
-<tr 📎-a=aria-rowindex aria-rowindex=11>
-    <td itemprop=myProp 📎-b=itemprop>
-        <input type=radio-button 🥂=📎
+<tr 📌-a=aria-rowindex aria-rowindex=11>
+    <td itemprop=myProp 📌-b=itemprop>
+        <input type=radio-button 🥂=📌
             🥂-name="hello-{a}-goodbye-{b}"
         >
     </td>

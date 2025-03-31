@@ -33,7 +33,7 @@
     "be-hive": "0.0.250",
     "mount-observer": "0.0.45",
     "trans-render": "0.0.889",
-    "xp-as": "0.0.3"
+    "xp-as": "0.0.4"
   },
   "devDependencies": {
     "@playwright/test": "1.51.1",
